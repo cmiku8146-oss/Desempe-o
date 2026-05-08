@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasarela de Pago Segura</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card-form { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
+        .card-form h2 { margin-top: 0; font-size: 1.2rem; color: #333; }
+        .field { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.8rem; margin-bottom: 0.3rem; color: #666; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; box-sizing: border-box; }
+        input:focus { border-color: #007bff; outline: none; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        /* El estado deshabilitado es la clave del requerimiento */
+        button:disabled { background: #a0a0a0; cursor: not-allowed; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+<div class="card-form">
+    <h2>Detalles del Pago</h2>
+    <form id="payment-form" action="/procesar-pago" method="POST">
+        <div class="field">
+            <label>Número de Tarjeta</label>
+            <input type="text" name="card_number" required placeholder="1234 5678 9101 1121" pattern="\[0-9]{13,16}" title="Introduce un número de tarjeta válido">
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <div class="field" style="flex: 2;">
+                <label>Expiración</label>
+                <input type="text" name="expiry" required placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/[0-9]{2}">
+            </div>
+            <div class="field" style="flex: 1;">
+                <label>CVV</label>
+                <input type="password" name="cvv" required placeholder="123" maxlength="4" pattern="\[0-9]{3,4}">
+            </div>
+        </div>
+
+        <button type="submit" id="btn-pago">Confirmar Transacción</button>
+    </form>
+</div>
+
+<script>
+    // Seleccionamos los elementos por su ID único
+    const formulario = document.getElementById('payment-form');
+    const boton = document.getElementById('btn-pago');
+
+    // Escuchamos el evento 'submit', no el 'click'.
+    // Esto garantiza que el bloqueo ocurra SOLO si los datos son válidos.
+    formulario.addEventListener('submit', function() {
+        // Ejecución inmediata: deshabilitar el botón
+        boton.disabled = true;
+        
+        // Cambio visual para dar feedback al usuario
+        boton.innerHTML = "Procesando...";
+        
+        // En un formulario HTML puro, aquí el navegador continúa con el POST
+        // y la página se recarga o redirige, evitando que el usuario 
+        // pueda interactuar de nuevo con este botón.
+        console.log("Formulario bloqueado. Evitando duplicados.");
+    });
+</script>
+
+</body>
+</html>
